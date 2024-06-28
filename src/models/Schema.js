@@ -10,6 +10,10 @@ const uploadSchema = new mongoose.Schema({
         type: String,
         // required : true
     },
+    boldWords:{
+        type: String,
+        // required : true
+    },
 })
 
 

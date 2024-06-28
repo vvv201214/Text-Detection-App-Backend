@@ -58,7 +58,8 @@ exports.uploadImage = (async (req, res, next) => {
     //save in the database
     const save = await UploadedSchema.create({
       image: data?.fileUrl,
-      text
+      text: text?.htmlParagraph,
+      boldWords: text?.boldParagraph
     })
     res.status(200).json({data: save, message: 'success'});
   } catch (error) {
@@ -68,6 +69,6 @@ exports.uploadImage = (async (req, res, next) => {
 });
 
 exports.getData = (async(req, res) => {
-  const data = await UploadedSchema.find()
+  const data = await UploadedSchema.find().sort({_id: -1});
   res.status(200).json({status:'Success', results: data.length, data: data});
 });

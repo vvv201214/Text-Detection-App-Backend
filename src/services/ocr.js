@@ -22,7 +22,6 @@ async function quickstart() {
     const name = `projects/${process.env.PROJECT_ID}/locations/${process.env.LOCATION}/processors/${process.env.PROCESSOR_ID}`;
     const encodedImage = Buffer.from(imageFile).toString('base64');
 
-    console.log('case1')
     const request = {
         name,
         rawDocument: {
@@ -38,11 +37,9 @@ async function quickstart() {
           }
     };
 
-    console.log('case2', request, client)
     // Recognizes text entities in the PDF document
     const [result] = await client.processDocument(request);
     const { document } = result;
-    console.log('case3')
     // Get all of the document text as one big string
     const { text, pages } = document;
 
@@ -58,7 +55,6 @@ async function quickstart() {
 
         return text.substring(startIndex, endIndex);
     };
-    console.log('case4')
     // Read the text recognition output from the processor
 
     let string = '';
@@ -87,24 +83,24 @@ async function quickstart() {
 
 async function generateHTML() {
     await quickstart();
-    return arr.map(item => {
+    const textArr=[];
+    const boldArr=[];
+    arr.forEach(item => {
         let newText = '';
 
         if (item.bold) {
             newText = `<b>${item.text}</b>`
+            boldArr.push(`<span><b>${item.text}, </b></span>`);
         } else{
             newText = `${item.text}`  
-        }    
-        return `<span>${newText}</span>`;
-    }).join('');
+        }
+        textArr.push(`<span>${newText}</span>`);
+    })
+    return {text: textArr.join(''), bold: boldArr.join('')};
 }
-
-// async function ocrMain(){
 
 exports.ocrMain = async() => {
     const data = await generateHTML(arr);
-    const htmlParagraph = `<p>${data}</p>`;
-    return htmlParagraph;
+    const htmlParagraph = `<p>${data.text}</p>`;
+    return {htmlParagraph, boldParagraph: data.bold};
 }
-
-// ocrMain();
