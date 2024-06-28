@@ -17,6 +17,6 @@ mongoose.connect(dB).then(()=>{
 
 googleApiLogin().then(()=>{});
 
-const server = app.listen(PORT, ()=>{
-    console.log(`Server running at ${PORT}`)
-});
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
